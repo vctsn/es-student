@@ -5,6 +5,8 @@
 const uint LED_PIN = 25;
 const uint BUTTON_PIN = 15;
 
+const uint DEBOUNCE_MS = 20;
+
 bool get_button_debounce(uint pin)
 {
     bool state = gpio_get(pin);
