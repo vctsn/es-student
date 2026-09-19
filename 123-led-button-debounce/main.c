@@ -5,12 +5,9 @@
 const uint LED_PIN = 25;
 const uint BUTTON_PIN = 15;
 
-bool get_button_debounce(uint pin)
-{
-    bool state = gpio_get(pin);
-    sleep_ms(DEBOUNCE_MS);
-    return state && gpio_get(pin);
-}
+volatile uint32_t *gpio_out_set = (uint32_t *)(SIO_BASE + SIO_GPIO_OUT_SET_OFFSET);
+volatile uint32_t *gpio_out_clr = (uint32_t *)(SIO_BASE + SIO_GPIO_OUT_CLR_OFFSET);
+const uint32_t led_mask = 1u << LED_PIN;
 
 int main()
 {
@@ -26,7 +23,7 @@ int main()
 
     while(1)
     {
-        bool current = get_button_debounce(BUTTON_PIN);
+        bool current = gpio_get(BUTTON_PIN);
 
         if (previous == true && current == false)
         {
