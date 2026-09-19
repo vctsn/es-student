@@ -36,3 +36,4 @@ int main()
 
         previous = current;
     }
+}
