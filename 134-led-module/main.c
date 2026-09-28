@@ -22,12 +22,12 @@ void handle_command(int command)
     if (command == 'e')
     {
         led_set(true);
-        LOG_DBG("led %s\n", led_is_on() ? "on" : "off");
+        LOG_INF("led %s\n", led_is_on() ? "on" : "off");
     }
     else if (command == 'd')
     {
         led_set(false);
-        LOG_DBG("led %s\n", led_is_on() ? "on" : "off");
+        LOG_INF("led %s\n", led_is_on() ? "on" : "off");
     }
     else if (command == 'v')
     {
