@@ -22,7 +22,7 @@ void handle_command(int command)
     if (command == 'e')
     {
         led_set(true);
-        LOG_INF("led %s\n", led_is_on() ? "on" : "off");
+        LOG_DBG("led %s\n", led_is_on() ? "on" : "off");
     }
     else if (command == 'd')
     {
