@@ -3,17 +3,17 @@
 устройство: 2e8a:000a
 серийный номер: 5303284730A0831C
 порт: /dev/ttyACM0
-начало: 2026-09-28T17:04:37
-   0.002 --> v
-   0.011 <-- dbg main:72 got v
-   0.011 <-- device: es-led-module 1.0.0, built Sep 28 2026 16:51:05, log level 3
-   1.043 --> e
-   1.063 <-- dbg main:72 got e
-   1.063 <-- dbg handle_command:25 led on
-   2.095 --> d
-   2.115 <-- dbg main:72 got d
-   2.116 <-- dbg handle_command:30 led off
-   3.136 --> q
-   3.147 <-- dbg main:72 got q
-   3.147 <-- err handle_command:38 unknown command: q
+начало: 2026-09-28T17:11:17
+   0.003 --> v
+   0.008 <-- dbg main:72 got v
+   0.008 <-- device: es-led-module 1.0.0, built Sep 28 2026 16:51:05, log level 3
+   1.036 --> e
+   1.039 <-- dbg main:72 got e
+   1.039 <-- dbg handle_command:25 led on
+   2.059 --> d
+   2.069 <-- dbg main:72 got d
+   2.069 <-- dbg handle_command:30 led off
+   3.104 --> q
+   3.121 <-- dbg main:72 got q
+   3.122 <-- err handle_command:38 unknown command: q
 итог: отправлено команд 4
