@@ -5,8 +5,6 @@
 void log_version(void);
 void log_prefix(const char *level, const char *function, int line);
 
-#define DEVICE_NAME "es-led-module"
-#define FIRMWARE_VERSION "1.0.0"
 
 #define LOG_LEVEL_ERR 1
 #define LOG_LEVEL_INF 2
