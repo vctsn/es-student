@@ -8,6 +8,7 @@
 #include "led.h"
 #include "device.h"
 #include "hardware/regs/sysinfo.h"
+#include "memory.h"
 
 #define LINE_SIZE 32
 
@@ -18,18 +19,15 @@ void cmd_enable(void)
     led_set(true);
     LOG_INF("led %s\n", led_is_on() ? "on" : "off");
 }
-
 void cmd_disable(void)
 {
     led_set(false);
     LOG_INF("led %s\n", led_is_on() ? "on" : "off");
 }
-
 void cmd_info(void)
 {
     device_info();
 }
-
 void cmd_version(void)
 {
     log_version();
@@ -38,7 +36,10 @@ void cmd_ping(void)
 {
     printf("pong\n");
 }
-
+void cmd_mem_info(void)
+{
+    mem_info();
+} 
 struct command_t
 {
     const char *name;
@@ -51,6 +52,7 @@ const struct command_t commands[] = {
     { "disable", cmd_disable },
     { "info", cmd_info },
     { "version", cmd_version },
+    { "mem_info", cmd_mem_info }, 
 };
 #define COMMAND_COUNT (sizeof(commands) / sizeof(commands[0]))
 
