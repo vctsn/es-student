@@ -39,8 +39,9 @@ void mem_info(void)
     row("image", (uintptr_t)&__flash_binary_start, (uintptr_t)&__flash_binary_end);
     row("free",  (uintptr_t)&__flash_binary_end, XIP_BASE + PICO_FLASH_SIZE_BYTES);
     row("boot2", (uintptr_t)&__boot2_start__, (uintptr_t)&__boot2_end__);
+    row("text",     (uintptr_t)&__boot2_end__,    (uintptr_t)&__etext);
     row("data flash", (uintptr_t)&__etext, (uintptr_t)(&__etext + data_size));
-    row("data-ram", (uintptr_t)&__data_start__, (uintptr_t)&__data_end__);
+    row("data ram", (uintptr_t)&__data_start__, (uintptr_t)&__data_end__);
     row("bss", (uintptr_t)&__bss_start__, (uintptr_t)&__bss_end__);
     row("heap", (uintptr_t)&__bss_end__, (uintptr_t)&__HeapLimit);
     row("stack", (uintptr_t)&__StackBottom, (uintptr_t)&__StackTop);
