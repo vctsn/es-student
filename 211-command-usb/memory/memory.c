@@ -13,33 +13,35 @@ uint32_t bss_variable;
 
 void fw_info(void) 
 {
-uint16_t *main_code = (uint16_t *)((uintptr_t)main & ~1u);
-uint16_t *fw_info_code = (uint16_t *)((uintptr_t)fw_info & ~1u);
-printf("%p | 0x%04x\n", (void*)main, *main_code);
-printf("%p | 0x%04x\n", (void*)fw_info, *fw_info_code);
-data_variable++;
-bss_variable++;
-printf("%p | %d\n", (void*)&data_variable, data_variable);
-printf("%p | %d\n", (void*)&bss_variable, bss_variable);
-printf("%p\n", (void*)commands);
-for (int i = 0; i < command_count; i++) 
-{ 
-    printf("%-10s | %p\n", commands[i].name, (void*)commands[i].handler);
-}
-printf("%p | %s\n", (void*)&DEVICE_NAME, DEVICE_NAME);
-printf("%p | %s\n", (void*)&FIRMWARE_VERSION, FIRMWARE_VERSION);
+    uint16_t *main_code = (uint16_t *)((uintptr_t)main & ~1u);
+    uint16_t *fw_info_code = (uint16_t *)((uintptr_t)fw_info & ~1u);
+    printf("%p | 0x%04x\n", (void*)main_code, *main_code);
+    printf("%p | 0x%04x\n", (void*)fw_info_code, *fw_info_code);
+    
+    data_variable++;
+    bss_variable++;
+    printf("%p | %d\n", (void*)&data_variable, data_variable);
+    printf("%p | %d\n", (void*)&bss_variable, bss_variable);
+    
+    printf("%p\n", (void*)commands);
+    for (int i = 0; i < command_count; i++) 
+    { 
+        printf("%-10s | %p\n", commands[i].name, (void*)(uintptr_t)commands[i].handler);
+    }
+    
+    printf("%p | %s\n", (void*)DEVICE_PROJECT, DEVICE_PROJECT);
+    printf("%p | %s\n", (void*)DEVICE_BOARD, DEVICE_BOARD);
 
-uint32_t stack_variable = 1946;
-printf("%p | %d\n", (void*)&stack_variable, stack_variable);
+    volatile uint32_t stack_variable = 1946;
+    printf("%p | %d\n", (void*)&stack_variable, stack_variable);
 
-uint32_t *heap_variable = malloc(sizeof(uint32_t));
-
-if (heap_variable != NULL)
-{
-       *heap_variable = 1951;
-       printf("%p | %p | %d\n", (void*)&heap_variable, (void*)heap_variable, *heap_variable);
-}
-free(heap_variable);
+    uint32_t *heap_variable = malloc(sizeof(uint32_t));
+    if (heap_variable != NULL)
+    {
+           *heap_variable = 1951;
+           printf("%p | %p | %d\n", (void*)&heap_variable, (void*)heap_variable, *heap_variable);
+    }
+    free(heap_variable);
 }
 
 #define SRAM_SIZE  (264 * 1024)   // 264 КБ из datasheet
