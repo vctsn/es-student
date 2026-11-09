@@ -12,7 +12,7 @@ struct info_t device_card = {
     .revision = 1
 };
 
-dev_info()
+void dev_info(void)
 {
     printf("struct          address     size offset value\n");
 
@@ -42,7 +42,7 @@ dev_info()
            fields, (unsigned int)sizeof(device_card), (unsigned int)sizeof(device_card) - fields);
 }
 
-void device_info()
+void device_info(void)
 {
     char board_id[PICO_UNIQUE_BOARD_ID_SIZE_BYTES * 2 + 1];
     pico_get_unique_board_id_string(board_id, sizeof(board_id));

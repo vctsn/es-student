@@ -14,8 +14,8 @@
 #define DEVICE_BOARD "unknown"
 #endif
 
-void device_info();
-dev_info();
+void device_info(void);
+void dev_info(void);
 struct info_t
 {
     uint32_t version;
