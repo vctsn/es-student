@@ -4,7 +4,7 @@ const uint LED_PIN = 25;
 
 static bool led_state = false;
 
-led_init()
+void led_init(void)
 {
 	gpio_init(LED_PIN);
     gpio_set_dir(LED_PIN, GPIO_OUT);
