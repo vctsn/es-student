@@ -12,7 +12,7 @@ struct info_t device_card = {
     .revision = 1
 };
 
-void dev_info()
+dev_info()
 {
     printf("struct          address     size offset value\n");
 
@@ -30,7 +30,7 @@ void dev_info()
            (unsigned int)sizeof(device_card.name), 
            (unsigned int)offsetof(struct info_t, name), 
            device_card.name);
-           
+
     printf("- %-13s 0x%08x %5u %6u %u\n", 
            "revision", (unsigned int)&device_card.revision, 
            (unsigned int)sizeof(device_card.revision), 

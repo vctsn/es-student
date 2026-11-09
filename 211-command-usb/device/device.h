@@ -15,7 +15,7 @@
 #endif
 
 void device_info();
-void dev_info();
+dev_info();
 struct info_t
 {
     uint32_t version;
