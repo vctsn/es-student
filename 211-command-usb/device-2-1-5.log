@@ -1,0 +1,16 @@
+задание: 2.1.5
+проект: 211-command-usb
+устройство: 2e8a:000a
+серийный номер: 5303284730A0831C
+порт: /dev/ttyACM0
+начало: 2026-11-10T01:15:42
+   0.002 --> dev_info
+   0.177 <-- dev_info
+   0.179 <-- dbg read_line:114 got dev_info
+   0.179 <-- struct          address     size offset value
+   0.180 <-- device_card     0x20000f58    20
+   0.180 <-- - revision      0x20000f69     1     17 1
+   0.180 <-- - version       0x20000f58     4      0 0x00000064
+   0.181 <-- - name          0x20000f5c    13      4 es-led-module
+   0.181 <-- fields 18, sizeof 20, padding 2
+итог: отправлено команд 1, принято строк 8
