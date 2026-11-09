@@ -17,8 +17,8 @@ void fw_info(void)
 
     uint16_t *main_code = (uint16_t *)((uintptr_t)main & ~1u);
     uint16_t *fw_info_code = (uint16_t *)((uintptr_t)fw_info & ~1u);
-    printf("main            0x%08x    0x%04x\n", (unsigned int)main_code, *main_code);
-    printf("fw_info         0x%08x    0x%04x\n", (unsigned int)fw_info_code, *fw_info_code);
+    printf("main            0x%08x    0x%04x\n", (unsigned int)main, *main_code);
+    printf("fw_info         0x%08x    0x%04x\n", (unsigned int)fw_info, *fw_info_code);
 
     printf("commands        0x%08x\n", (unsigned int)commands);
 
