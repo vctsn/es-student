@@ -5,11 +5,37 @@
 #include "memory.h"
 #include "command.h"
 #include <stdlib.h>
- #include "device.h"
+#include "device.h"
+#include "led.h"
+#include "hardware/gpio.h"
+#include "hardware/structs/sio.h"
+
+#define VECTOR_TABLE 0x10000100
+volatile uint32_t *gpio_in = (volatile uint32_t *)0xd0000004;
 
 int main(void);
 uint32_t data_variable = 100;
 uint32_t bss_variable;
+
+void boot_info(void)
+{
+    const uint32_t *vectors = (const uint32_t *)VECTOR_TABLE;
+    uint32_t stack_top = vectors[0];
+    uint32_t reset_handler = vectors[1];
+    uint32_t *reset_handler_f = (uint32_t *)((uintptr_t)reset_handler & ~1u);
+
+    uint32_t level = (*gpio_in >> led_pin()) & 1u;
+    uint32_t sdk_level = gpio_get(led_pin());
+
+    printf("vector table   0x%08x\n", (unsigned int)vectors);
+    printf("  stack top    0x%08x\n", (unsigned int)stack_top);
+    printf("  reset        0x%08x\n", (unsigned int)reset_handler);
+    printf("  reset (even) 0x%08x\n", (unsigned int)reset_handler_f);
+    
+    printf("gpio in        0x%08x\n", (unsigned int)gpio_in);
+    printf("  led bit      %u\n", (unsigned int)led_pin());
+    printf("  gpio_get     %u\n", sdk_level);
+}
 
 void fw_info(void) 
 {
