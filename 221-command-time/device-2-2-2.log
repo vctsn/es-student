@@ -1,0 +1,63 @@
+задание: 2.2.2
+проект: 221-command-time
+устройство: 2e8a:000a
+серийный номер: 5303284730A0831C
+порт: /dev/ttyACM0
+начало: 2026-11-10T20:24:38
+   0.003 --> uptime
+   0.007 <-- uptime
+   0.008 <-- dbg read_line:122 got uptime
+   0.008 <-- uptime: 51996 ms
+   0.420 --> boot_info
+   0.422 <-- boot_info
+   0.423 <-- dbg read_line:122 got boot_info
+   0.423 <-- vector table   0x10000100
+   0.424 <-- stack top    0x20042000
+   0.424 <-- reset        0x100001f7
+   0.425 <-- reset (even) 0x100001f6
+   0.425 <-- gpio in        0xd0000004
+   0.425 <-- led bit      0
+   0.425 <-- gpio_get     0
+   0.837 --> uptime
+   0.837 <-- uptime
+   0.838 <-- dbg read_line:122 got uptime
+   0.839 <-- uptime: 52813 ms
+   1.249 --> boot_info
+   1.252 <-- boot_info
+   1.252 <-- dbg read_line:122 got boot_info
+   1.253 <-- vector table   0x10000100
+   1.254 <-- stack top    0x20042000
+   1.254 <-- reset        0x100001f7
+   1.255 <-- reset (even) 0x100001f6
+   1.255 <-- gpio in        0xd0000004
+   1.256 <-- led bit      0
+   1.256 <-- gpio_get     0
+   1.669 --> uptime
+   1.669 <-- uptime
+   1.669 <-- dbg read_line:122 got uptime
+   1.670 <-- uptime: 53628 ms
+   2.080 --> boot_info
+   2.082 <-- boot_info
+   2.082 <-- dbg read_line:122 got boot_info
+   2.082 <-- vector table   0x10000100
+   2.083 <-- stack top    0x20042000
+   2.083 <-- reset        0x100001f7
+   2.083 <-- reset (even) 0x100001f6
+   2.083 <-- gpio in        0xd0000004
+   2.084 <-- led bit      0
+   2.084 <-- gpio_get     0
+   2.496 --> uptime
+   2.496 <-- uptime
+   2.497 <-- dbg read_line:122 got uptime
+   2.497 <-- uptime: 54439 ms
+   2.908 --> boot_info
+   2.908 <-- boot_info
+   2.908 <-- dbg read_line:122 got boot_info
+   2.909 <-- vector table   0x10000100
+   2.909 <-- stack top    0x20042000
+   2.909 <-- reset        0x100001f7
+   2.909 <-- reset (even) 0x100001f6
+   2.910 <-- gpio in        0xd0000004
+   2.911 <-- led bit      1
+   2.911 <-- gpio_get     1
+итог: отправлено команд 8, принято строк 48
