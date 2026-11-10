@@ -3,18 +3,24 @@
 устройство: 2e8a:000a
 серийный номер: 5303284730A0831C
 порт: /dev/ttyACM0
-начало: 2026-11-10T19:10:59
-   0.003 --> clk_info
-   0.169 <-- clk_info
-   0.170 <-- dbg read_line:125 got clk_info
-   0.172 <-- err handle_command:106 unknown command: clk_info
-   2.012 --> info
-   2.106 <-- info
-   2.107 <-- dbg read_line:125 got info
-   2.107 <-- project: 221-command-time
-   2.107 <-- repo: https://github.com/vctsn/es-student
-   2.107 <-- board: pico
-   2.107 <-- serial: 5303284730A0831C
-   2.108 <-- chip: manufacturer 0x927, part 0x0002, revision 2
-   2.108 <-- pico-sdk: 2.3.0
-итог: отправлено команд 2, принято строк 11
+начало: 2026-11-10T19:20:21
+   0.002 --> clk_info
+   0.170 <-- clk_info
+   0.173 <-- dbg read_line:125 got clk_info
+   0.176 <-- signal     set_khz measured_khz
+   0.176 <-- clk_ref      12000        12001
+   0.176 <-- clk_sys     125000       125000
+   0.177 <-- clk_peri    125000       125001
+   0.178 <-- clk_usb      48000        48000
+   0.178 <-- clk_adc      48000        48000
+   0.178 <-- clk_rosc         -         5285
+   2.021 --> info
+   2.115 <-- info
+   2.116 <-- dbg read_line:125 got info
+   2.117 <-- project: 221-command-time
+   2.117 <-- repo: https://github.com/vctsn/es-student
+   2.118 <-- board: pico
+   2.118 <-- serial: 5303284730A0831C
+   2.118 <-- chip: manufacturer 0x927, part 0x0002, revision 2
+   2.118 <-- pico-sdk: 2.3.0
+итог: отправлено команд 2, принято строк 17
