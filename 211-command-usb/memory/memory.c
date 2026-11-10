@@ -33,7 +33,7 @@ void boot_info(void)
     printf("  reset (even) 0x%08x\n", (unsigned int)reset_handler_f);
     
     printf("gpio in        0x%08x\n", (unsigned int)gpio_in);
-    printf("  led bit      %u\n", (unsigned int)led_pin());
+    printf("  led bit      %u\n", (unsigned int)level);
     printf("  gpio_get     %u\n", sdk_level);
 }
 
