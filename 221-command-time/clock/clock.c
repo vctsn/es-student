@@ -8,7 +8,7 @@ static void row(const char *name, uint32_t set_khz, uint32_t measured_khz)
     printf("%-8s %9u %12u\n", name, (unsigned)set_khz, (unsigned)measured_khz);
 }
 
-void clock_info(void)
+void clk_info(void)
 {
     printf("%-8s %9s %12s\n", "signal", "set_khz", "measured_khz");
     row("clk_ref", clock_get_hz(clk_ref) / 1000, frequency_count_khz(CLOCKS_FC0_SRC_VALUE_CLK_REF));

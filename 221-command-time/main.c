@@ -56,7 +56,7 @@ void cmd_boot_info(void)
 }
 void cmd_clk_info()
 {
-    clock_info();
+    clk_info();
 }
 
 const struct command_t commands[] = {

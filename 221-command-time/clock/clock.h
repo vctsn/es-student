@@ -1,1 +1,1 @@
-void clock_info(void);
+void clk_info(void);
