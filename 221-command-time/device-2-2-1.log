@@ -1,0 +1,20 @@
+задание: 2.2.1
+проект: 221-command-time
+устройство: 2e8a:000a
+серийный номер: 5303284730A0831C
+порт: /dev/ttyACM0
+начало: 2026-11-10T19:10:59
+   0.003 --> clk_info
+   0.169 <-- clk_info
+   0.170 <-- dbg read_line:125 got clk_info
+   0.172 <-- err handle_command:106 unknown command: clk_info
+   2.012 --> info
+   2.106 <-- info
+   2.107 <-- dbg read_line:125 got info
+   2.107 <-- project: 221-command-time
+   2.107 <-- repo: https://github.com/vctsn/es-student
+   2.107 <-- board: pico
+   2.107 <-- serial: 5303284730A0831C
+   2.108 <-- chip: manufacturer 0x927, part 0x0002, revision 2
+   2.108 <-- pico-sdk: 2.3.0
+итог: отправлено команд 2, принято строк 11
