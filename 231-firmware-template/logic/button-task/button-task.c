@@ -11,6 +11,7 @@ typedef enum {
     BUTTON_STATE_RELEASE_DEBOUNCE,
 } button_state_t;
 
+static const uint64_t BUTTON_DEBOUNCE_US = 20000;
 static button_state_t s_state = BUTTON_STATE_RELEASED;
 static uint64_t s_debounce_start_us = 0;
 static uint32_t s_press_count = 0;
