@@ -1,4 +1,5 @@
-#include <stdbool.h>
+#pragma once
+
 #include <stdint.h>
 
 typedef enum {
@@ -9,9 +10,7 @@ typedef enum {
 
 void led_task_init(void);
 void led_task_handle(void);
-
 void led_task_set_state(led_state_t state);
 led_state_t led_task_get_state(void);
-
-// false — период не принят
-bool led_task_set_period_ms(uint32_t period_ms);
+void led_task_set_period_ms(uint32_t period_ms);
+uint32_t led_task_get_period_ms(void);

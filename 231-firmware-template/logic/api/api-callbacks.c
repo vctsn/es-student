@@ -2,6 +2,7 @@
 #include "firmware.h"
 #include "device/device.h"
 #include "platform/platform.h"
+#include "led-task/led-task.h"
 #include <errno.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -35,6 +36,24 @@ static bool parse_u32(const char *text, uint32_t *out)
     return true;
 }
 
+static const char *led_state_name(led_state_t state)
+{
+    switch (state)
+    {
+        case LED_STATE_OFF:   return "off";
+        case LED_STATE_ON:    return "on";
+        case LED_STATE_BLINK: return "blink";
+        default:              return "unknown";
+    }
+}
+
+static void print_led_status(void)
+{
+    printf("led: %s, period %lu ms\r\n",
+           led_state_name(led_task_get_state()),
+           (unsigned long)led_task_get_period_ms());
+}
+
 static void cmd_info(const command_t *command)
 {
     (void)command;
@@ -60,6 +79,46 @@ static void cmd_uptime(const command_t *command)
     printf("uptime: %llu ms\r\n", (unsigned long long)(platform_time_us() / 1000ULL));
 }
 
+static void cmd_led_enable(const command_t *command)
+{
+    (void)command;
+    led_task_set_state(LED_STATE_ON);
+    print_led_status();
+}
+
+static void cmd_led_disable(const command_t *command)
+{
+    (void)command;
+    led_task_set_state(LED_STATE_OFF);
+    print_led_status();
+}
+
+static void cmd_led_blink(const command_t *command)
+{
+    (void)command;
+    led_task_set_state(LED_STATE_BLINK);
+    print_led_status();
+}
+
+static void cmd_led_period(const command_t *command)
+{
+    uint32_t period_ms = 0;
+    if (command->argc != 1 || !parse_u32(command->argv, &period_ms))
+    {
+        printf("error: usage led_period <period_ms>\r\n");
+        return;
+    }
+
+    if (period_ms == 0)
+    {
+        printf("error: period_ms must be greater than 0\r\n");
+        return;
+    }
+
+    led_task_set_period_ms(period_ms);
+    print_led_status();
+}
+
 static void cmd_calc_pi(const command_t *command)
 {
     uint32_t terms = 1000000U;
@@ -72,7 +131,7 @@ static void cmd_calc_pi(const command_t *command)
 
     if (command->argc == 1)
     {
-        if (!parse_u32(command->argv[0], &terms))
+        if (!parse_u32(command->argv, &terms))
         {
             printf("error: usage calc_pi [terms]\r\n");
             return;
@@ -106,9 +165,13 @@ static void cmd_calc_pi(const command_t *command)
 }
 
 const api_command_t g_api_commands[] = {
-    { "info",    "device passport",               cmd_info },
-    { "uptime",  "time since reset",              cmd_uptime },
-    { "calc_pi", "calculate pi: calc_pi [terms]", cmd_calc_pi },
+    { "info",        "device passport",               cmd_info },
+    { "uptime",      "time since reset",              cmd_uptime },
+    { "led_enable",  "turn led on",                   cmd_led_enable },
+    { "led_disable", "turn led off",                  cmd_led_disable },
+    { "led_blink",   "blink led",                     cmd_led_blink },
+    { "led_period",  "set led blink period",          cmd_led_period },
+    { "calc_pi",     "calculate pi: calc_pi [terms]", cmd_calc_pi },
 };
 
-const size_t g_api_commands_count = sizeof(g_api_commands) / sizeof(g_api_commands[0]);
+const size_t g_api_commands_count = sizeof(g_api_commands) / sizeof(g_api_commands);
