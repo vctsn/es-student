@@ -106,7 +106,7 @@ static void cmd_led_blink(const command_t *command)
 static void cmd_led_period(const command_t *command)
 {
     uint32_t period_ms = 0;
-    if (command->argc != 1 || !parse_u32(command->argv, &period_ms))
+    if (command->argc != 1 || !parse_u32(*command->argv, &period_ms))
     {
         printf("error: usage led_period <period_ms>\r\n");
         return;
@@ -142,7 +142,7 @@ static void cmd_pi_start(const command_t *command)
 
     if (command->argc == 1)
     {
-        if (!parse_u32(command->argv, &terms))
+        if (!parse_u32(*command->argv, &terms))
         {
             printf("error: usage pi_start [<terms>]\r\n");
             return;
