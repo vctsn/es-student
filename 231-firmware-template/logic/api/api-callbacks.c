@@ -193,7 +193,7 @@ static void cmd_profiling(const command_t *command)
     {
         if (profiling_get(id, &res))
         {
-            printf("%-10s count %-10lu mean %-8.2f us  max %lu us\r\n",
+            printf("%-10s count %-10lu mean %.2f us  max %lu us\r\n",
                    res.name,
                    (unsigned long)res.count,
                    res.mean_us,
@@ -204,6 +204,7 @@ static void cmd_profiling(const command_t *command)
     printf("profiling is disabled in this build\r\n");
 #endif
 }
+
 
 static void cmd_profiling_reset(const command_t *command)
 {
