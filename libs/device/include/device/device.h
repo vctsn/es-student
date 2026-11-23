@@ -5,7 +5,7 @@
 typedef struct
 {
     const char *board;
-    char serial;
+    char serial[17];
     uint16_t chip_manufacturer;
     uint16_t chip_part;
     uint8_t chip_revision;
