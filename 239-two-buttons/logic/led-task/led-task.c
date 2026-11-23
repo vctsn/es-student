@@ -96,17 +96,16 @@ void led_task_handle(void)
 
 void led_task_next_period(void)
 {
-    if (s_period_ms == 250U)
+    if (s_period_ms == 250)
     {
-        led_task_set_period_ms(500U);
+        led_task_set_period_ms(500);
     }
-    else if (s_period_ms == 500U)
+    else if (s_period_ms == 500)
     {
-        led_task_set_period_ms(1000U);
+        led_task_set_period_ms(1000);
     }
     else
     {
-        led_task_set_period_ms(250U);
+        led_task_set_period_ms(250);
     }
 }
-
