@@ -61,7 +61,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     logic
     profiling
     logging
-    pico_standard_link
+    pico_stdlib
 )
 
 pico_enable_stdio_usb(${PROJECT_NAME} 1)
