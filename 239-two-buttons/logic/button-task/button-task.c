@@ -3,6 +3,7 @@
 #include <stddef.h>
 
 static const uint64_t BUTTON_DEBOUNCE_US = 20000;
+static const uint64_t BUTTON_LONG_PRESS_US = 1000000;
 
 typedef enum {
     BUTTON_STATE_RELEASED,
@@ -14,13 +15,18 @@ typedef enum {
 typedef struct {
     button_state_t state;
     uint64_t debounce_start_us;
+    uint64_t press_start_us;
     uint32_t press_count;
+    bool long_reported;
     button_task_callback_t on_press;
+    button_task_callback_t on_long_press;
 } button_ctx_t;
 
 static button_ctx_t s_buttons[PLATFORM_BUTTON_COUNT];
 
-void button_task_init(platform_button_t button, button_task_callback_t on_press)
+void button_task_init(platform_button_t button,
+                      button_task_callback_t on_press,
+                      button_task_callback_t on_long_press)
 {
     if (button >= PLATFORM_BUTTON_COUNT)
     {
@@ -29,8 +35,11 @@ void button_task_init(platform_button_t button, button_task_callback_t on_press)
 
     s_buttons[button].state = BUTTON_STATE_RELEASED;
     s_buttons[button].debounce_start_us = 0;
+    s_buttons[button].press_start_us = 0;
     s_buttons[button].press_count = 0;
+    s_buttons[button].long_reported = false;
     s_buttons[button].on_press = on_press;
+    s_buttons[button].on_long_press = on_long_press;
 }
 
 static void handle_single_button(platform_button_t id)
@@ -57,8 +66,11 @@ static void handle_single_button(platform_button_t id)
             else if ((now_us - btn->debounce_start_us) >= BUTTON_DEBOUNCE_US)
             {
                 btn->state = BUTTON_STATE_PRESSED;
+                btn->press_start_us = now_us;
+                btn->long_reported = false;
                 btn->press_count++;
-                if (btn->on_press != NULL)
+
+                if (btn->on_long_press == NULL && btn->on_press != NULL)
                 {
                     btn->on_press();
                 }
@@ -71,6 +83,13 @@ static void handle_single_button(platform_button_t id)
                 btn->debounce_start_us = now_us;
                 btn->state = BUTTON_STATE_RELEASE_DEBOUNCE;
             }
+            else if (btn->on_long_press != NULL &&
+                     !btn->long_reported &&
+                     (now_us - btn->press_start_us) >= BUTTON_LONG_PRESS_US)
+            {
+                btn->long_reported = true;
+                btn->on_long_press();
+            }
             break;
 
         case BUTTON_STATE_RELEASE_DEBOUNCE:
@@ -81,6 +100,10 @@ static void handle_single_button(platform_button_t id)
             else if ((now_us - btn->debounce_start_us) >= BUTTON_DEBOUNCE_US)
             {
                 btn->state = BUTTON_STATE_RELEASED;
+                if (btn->on_long_press != NULL && !btn->long_reported && btn->on_press != NULL)
+                {
+                    btn->on_press();
+                }
             }
             break;
     }

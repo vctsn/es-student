@@ -32,9 +32,10 @@ int main(void)
     pi_task_init();
 
     led_task_init();
-    button_task_init(PLATFORM_BUTTON_1, led_task_next_state);
-    button_task_init(PLATFORM_BUTTON_2, led_task_next_period);
+    button_task_init(PLATFORM_BUTTON_1, led_task_next_state, led_task_blink);
+    button_task_init(PLATFORM_BUTTON_2, led_task_next_period, NULL);
     pi_task_init();
+
 
 
     LOG_INF("%s %s", FIRMWARE_NAME, FIRMWARE_VERSION);
