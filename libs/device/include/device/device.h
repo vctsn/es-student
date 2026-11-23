@@ -5,7 +5,7 @@
 typedef struct
 {
     const char *board;
-    char serial[17];
+    char serial;
     uint16_t chip_manufacturer;
     uint16_t chip_part;
     uint8_t chip_revision;
@@ -13,4 +13,5 @@ typedef struct
 } device_info_t;
 
 void device_get_info(device_info_t *info);
+
 

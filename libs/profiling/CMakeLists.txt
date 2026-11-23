@@ -3,9 +3,12 @@ add_library(profiling STATIC
 )
 
 target_include_directories(profiling PUBLIC
-    include
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
 target_link_libraries(profiling PRIVATE
-    pico_stdlib
+    systime
 )
+
+target_compile_options(profiling PRIVATE -Wall)
+

@@ -2,6 +2,7 @@
 #include "firmware.h"
 #include "device/device.h"
 #include "platform/platform.h"
+#include "profiling/profiling.h"
 #include "led-task/led-task.h"
 #include "button-task/button-task.h"
 #include "pi-task/pi-task.h"
@@ -183,16 +184,42 @@ static void cmd_pi(const command_t *command)
     }
 }
 
+static void cmd_profiling(const command_t *command)
+{
+    (void)command;
+    profiling_result_t res;
+    for (uint32_t id = 0; id < PROFILING_MAX_STOPWATCHES; id++)
+    {
+        if (profiling_get(id, &res))
+        {
+            printf("%-10s count %-10lu mean %-8.2f us  max %lu us\r\n",
+                   res.name,
+                   (unsigned long)res.count,
+                   res.mean_us,
+                   (unsigned long)res.max_us);
+        }
+    }
+}
+
+static void cmd_profiling_reset(const command_t *command)
+{
+    (void)command;
+    profiling_reset();
+    printf("profiling reset\r\n");
+}
+
 const api_command_t g_api_commands[] = {
-    { "info",        "device passport",               cmd_info },
-    { "uptime",      "time since reset",              cmd_uptime },
-    { "led_enable",  "turn led on",                   cmd_led_enable },
-    { "led_disable", "turn led off",                  cmd_led_disable },
-    { "led_blink",   "blink led",                     cmd_led_blink },
-    { "led_period",  "set led blink period",          cmd_led_period },
-    { "button",      "button state and press count",  cmd_button },
-    { "pi_start",    "start pi calculation",          cmd_pi_start },
-    { "pi",          "pi calculation result or state", cmd_pi },
+    { "info",            "device passport",                cmd_info },
+    { "uptime",          "time since reset",               cmd_uptime },
+    { "led_enable",      "turn led on",                    cmd_led_enable },
+    { "led_disable",     "turn led off",                   cmd_led_disable },
+    { "led_blink",       "blink led",                      cmd_led_blink },
+    { "led_period",      "set led blink period",           cmd_led_period },
+    { "button",          "button state and press count",   cmd_button },
+    { "pi_start",        "start pi calculation",           cmd_pi_start },
+    { "pi",              "pi calculation result or state", cmd_pi },
+    { "profiling",       "stopwatch measurements",         cmd_profiling },
+    { "profiling_reset", "reset stopwatch measurements",   cmd_profiling_reset },
 };
 
 const size_t g_api_commands_count = sizeof(g_api_commands) / sizeof(g_api_commands);

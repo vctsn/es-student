@@ -3,9 +3,12 @@ add_library(systime STATIC
 )
 
 target_include_directories(systime PUBLIC
-    include
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
 target_link_libraries(systime PRIVATE
     pico_stdlib
 )
+
+target_compile_options(systime PRIVATE -Wall)
+
