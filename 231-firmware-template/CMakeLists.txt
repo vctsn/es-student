@@ -18,6 +18,7 @@ target_compile_definitions(profiling PUBLIC
     PROFILING_ENABLED=1
 )
 
+# железо прибора: единственное место проекта с SDK
 add_library(platform STATIC
     platform/platform.c
 )
@@ -28,6 +29,7 @@ target_link_libraries(platform PRIVATE
     pico_stdlib
 )
 
+# логика прибора: задачи и команды, без SDK
 add_library(logic STATIC
     logic/api/api.c
     logic/api/api-callbacks.c
@@ -36,13 +38,13 @@ add_library(logic STATIC
     logic/pi-task/pi-task.c
 )
 target_include_directories(logic PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/logic
 )
 target_link_libraries(logic
     PUBLIC
         stdio_text_protocol
     PRIVATE
+        platform
         device
         profiling
         systime
@@ -53,15 +55,11 @@ add_executable(${PROJECT_NAME}
 )
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/logic
 )
 target_link_libraries(${PROJECT_NAME} PRIVATE
     platform
     logic
-    stdio_text_protocol
-    device
     profiling
-    systime
     logging
     pico_standard_link
 )

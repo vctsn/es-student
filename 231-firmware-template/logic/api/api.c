@@ -6,9 +6,9 @@
 static void print_help(void)
 {
     printf("%-16s %s\r\n", "help", "list of commands");
-    for (size_t i = 0; i < g_api_commands_count; i++)
+    for (uint32_t i = 0; i < api_command_count; i++)
     {
-        printf("%-16s %s\r\n", g_api_commands[i].name, g_api_commands[i].help);
+        printf("%-16s %s\r\n", api_commands[i].name, api_commands[i].help);
     }
 }
 
@@ -31,11 +31,11 @@ void api_handle(const command_t *command)
         return;
     }
 
-    for (size_t i = 0; i < g_api_commands_count; i++)
+    for (uint32_t i = 0; i < api_command_count; i++)
     {
-        if (strcmp(command->name, g_api_commands[i].name) == 0)
+        if (strcmp(command->name, api_commands[i].name) == 0)
         {
-            g_api_commands[i].callback(command);
+            api_commands[i].callback(command);
             return;
         }
     }

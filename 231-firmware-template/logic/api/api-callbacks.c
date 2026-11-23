@@ -219,7 +219,7 @@ static void cmd_profiling_reset(const command_t *command)
     printf("profiling reset\r\n");
 }
 
-const api_command_t g_api_commands[] = {
+const api_command_t api_commands[] = {
     { "info",            "device passport",                cmd_info },
     { "uptime",          "time since reset",               cmd_uptime },
     { "led_enable",      "turn led on",                    cmd_led_enable },
@@ -233,4 +233,4 @@ const api_command_t g_api_commands[] = {
     { "profiling_reset", "reset stopwatch measurements",   cmd_profiling_reset },
 };
 
-const size_t g_api_commands_count = sizeof(g_api_commands) / sizeof(g_api_commands);
+const uint32_t api_command_count = sizeof(api_commands) / sizeof(api_commands);
