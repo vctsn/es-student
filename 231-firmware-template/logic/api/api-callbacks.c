@@ -8,6 +8,8 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "button-task/button-task.h"
+
 
 static bool parse_u32(const char *text, uint32_t *out)
 {
@@ -164,6 +166,15 @@ static void cmd_calc_pi(const command_t *command)
     printf("time: %llu ms\r\n", (unsigned long long)elapsed_ms);
 }
 
+static void cmd_button(const command_t *command)
+{
+    (void)command;
+    printf("button: %s, presses %lu\r\n",
+           button_task_is_pressed() ? "pressed" : "released",
+           (unsigned long)button_task_get_press_count());
+}
+
+
 const api_command_t g_api_commands[] = {
     { "info",        "device passport",               cmd_info },
     { "uptime",      "time since reset",              cmd_uptime },
@@ -171,7 +182,9 @@ const api_command_t g_api_commands[] = {
     { "led_disable", "turn led off",                  cmd_led_disable },
     { "led_blink",   "blink led",                     cmd_led_blink },
     { "led_period",  "set led blink period",          cmd_led_period },
+    { "button",      "button state and press count",  cmd_button },
     { "calc_pi",     "calculate pi: calc_pi [terms]", cmd_calc_pi },
 };
+
 
 const size_t g_api_commands_count = sizeof(g_api_commands) / sizeof(g_api_commands);

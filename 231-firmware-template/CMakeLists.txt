@@ -24,6 +24,7 @@ add_library(logic STATIC
     logic/api/api.c
     logic/api/api-callbacks.c
     logic/led-task/led-task.c
+    logic/button-task/button-task.c
 )
 target_include_directories(logic PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}

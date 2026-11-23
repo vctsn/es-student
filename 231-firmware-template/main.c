@@ -2,6 +2,7 @@
 #include "stdio-text-protocol/stdio-text-protocol.h"
 #include "api/api.h"
 #include "led-task/led-task.h"
+#include "button-task/button-task.h"
 #include <stddef.h>
 
 int main(void)
@@ -9,6 +10,7 @@ int main(void)
     platform_init();
     stdio_text_protocol_init();
     led_task_init();
+    button_task_init(led_task_next_state);
 
     while (1)
     {
@@ -19,7 +21,9 @@ int main(void)
         }
 
         led_task_handle();
+        button_task_handle();
     }
 
     return 0;
 }
+
