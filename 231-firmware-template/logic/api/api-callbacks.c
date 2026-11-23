@@ -76,6 +76,11 @@ static void cmd_info(const command_t *command)
     printf("pico-sdk: %s\r\n", info.sdk_version);
 }
 
+static void cmd_uptime(const command_t *command)
+{
+    (void)command;
+    printf("uptime: %llu ms\r\n", (unsigned long long)systime_ms());
+}
 
 static void cmd_led_enable(const command_t *command)
 {
@@ -179,17 +184,6 @@ static void cmd_pi(const command_t *command)
     }
 }
 
-// В шапке файла заменить #include "platform/platform.h" на:
-#include "systime/systime.h"
-
-// В cmd_uptime:
-static void cmd_uptime(const command_t *command)
-{
-    (void)command;
-    printf("uptime: %llu ms\r\n", (unsigned long long)systime_ms());
-}
-
-// В cmd_profiling:
 static void cmd_profiling(const command_t *command)
 {
     (void)command;
@@ -210,7 +204,6 @@ static void cmd_profiling(const command_t *command)
     printf("profiling is disabled in this build\r\n");
 #endif
 }
-
 
 static void cmd_profiling_reset(const command_t *command)
 {
@@ -233,4 +226,5 @@ const api_command_t api_commands[] = {
     { "profiling_reset", "reset stopwatch measurements",   cmd_profiling_reset },
 };
 
-const uint32_t api_command_count = sizeof(api_commands) / sizeof(api_commands);
+const uint32_t api_command_count = sizeof(api_commands) / sizeof(api_commands[0]);
+
