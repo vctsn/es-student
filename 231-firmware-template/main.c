@@ -3,6 +3,7 @@
 #include "api/api.h"
 #include "led-task/led-task.h"
 #include "button-task/button-task.h"
+#include "pi-task/pi-task.h"
 #include <stddef.h>
 
 int main(void)
@@ -11,6 +12,7 @@ int main(void)
     stdio_text_protocol_init();
     led_task_init();
     button_task_init(led_task_next_state);
+    pi_task_init();
 
     while (1)
     {
@@ -22,8 +24,10 @@ int main(void)
 
         led_task_handle();
         button_task_handle();
+        pi_task_handle();
     }
 
     return 0;
 }
+
 

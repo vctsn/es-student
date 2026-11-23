@@ -3,13 +3,13 @@
 #include "device/device.h"
 #include "platform/platform.h"
 #include "led-task/led-task.h"
+#include "button-task/button-task.h"
+#include "pi-task/pi-task.h"
 #include <errno.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "button-task/button-task.h"
-
 
 static bool parse_u32(const char *text, uint32_t *out)
 {
@@ -121,13 +121,21 @@ static void cmd_led_period(const command_t *command)
     print_led_status();
 }
 
-static void cmd_calc_pi(const command_t *command)
+static void cmd_button(const command_t *command)
+{
+    (void)command;
+    printf("button: %s, presses %lu\r\n",
+           button_task_is_pressed() ? "pressed" : "released",
+           (unsigned long)button_task_get_press_count());
+}
+
+static void cmd_pi_start(const command_t *command)
 {
     uint32_t terms = 1000000U;
 
     if (command->argc > 1)
     {
-        printf("error: usage calc_pi [terms]\r\n");
+        printf("error: usage pi_start [<terms>]\r\n");
         return;
     }
 
@@ -135,7 +143,7 @@ static void cmd_calc_pi(const command_t *command)
     {
         if (!parse_u32(command->argv, &terms))
         {
-            printf("error: usage calc_pi [terms]\r\n");
+            printf("error: usage pi_start [<terms>]\r\n");
             return;
         }
         if (terms == 0)
@@ -145,35 +153,35 @@ static void cmd_calc_pi(const command_t *command)
         }
     }
 
-    uint64_t start_us = platform_time_us();
-    double sum = 0.0;
-    for (uint32_t k = 0; k < terms; k++)
+    if (!pi_task_start(terms))
     {
-        double denom = 2.0 * (double)k + 1.0;
-        if ((k & 1U) == 0U)
-        {
-            sum += 1.0 / denom;
-        }
-        else
-        {
-            sum -= 1.0 / denom;
-        }
+        printf("error: pi is busy\r\n");
+        return;
     }
-    double pi = 4.0 * sum;
-    uint64_t elapsed_ms = (platform_time_us() - start_us) / 1000ULL;
 
-    printf("pi: %.9f\r\n", pi);
-    printf("time: %llu ms\r\n", (unsigned long long)elapsed_ms);
+    printf("pi: started, %lu terms\r\n", (unsigned long)terms);
 }
 
-static void cmd_button(const command_t *command)
+static void cmd_pi(const command_t *command)
 {
     (void)command;
-    printf("button: %s, presses %lu\r\n",
-           button_task_is_pressed() ? "pressed" : "released",
-           (unsigned long)button_task_get_press_count());
-}
+    pi_state_t state = pi_task_get_state();
 
+    if (state == PI_STATE_NOT_STARTED)
+    {
+        printf("pi: not started\r\n");
+    }
+    else if (state == PI_STATE_RUNNING)
+    {
+        printf("pi: running\r\n");
+    }
+    else
+    {
+        uint32_t elapsed_ms = 0;
+        double pi = pi_task_get_result(&elapsed_ms);
+        printf("pi: %.9f in %lu ms\r\n", pi, (unsigned long)elapsed_ms);
+    }
+}
 
 const api_command_t g_api_commands[] = {
     { "info",        "device passport",               cmd_info },
@@ -183,8 +191,8 @@ const api_command_t g_api_commands[] = {
     { "led_blink",   "blink led",                     cmd_led_blink },
     { "led_period",  "set led blink period",          cmd_led_period },
     { "button",      "button state and press count",  cmd_button },
-    { "calc_pi",     "calculate pi: calc_pi [terms]", cmd_calc_pi },
+    { "pi_start",    "start pi calculation",          cmd_pi_start },
+    { "pi",          "pi calculation result or state", cmd_pi },
 };
-
 
 const size_t g_api_commands_count = sizeof(g_api_commands) / sizeof(g_api_commands);
