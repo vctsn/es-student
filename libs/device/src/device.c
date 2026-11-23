@@ -5,8 +5,8 @@
 #include "hardware/structs/sysinfo.h"
 #include <stddef.h>
 
-#ifndef PICO_BOARD
-#define PICO_BOARD "unknown"
+#ifndef DEVICE_BOARD
+#define DEVICE_BOARD "unknown"
 #endif
 
 void device_get_info(device_info_t *info)
@@ -16,7 +16,7 @@ void device_get_info(device_info_t *info)
         return;
     }
 
-    info->board = PICO_BOARD;
+    info->board = DEVICE_BOARD;
     pico_get_unique_board_id_string(info->serial, sizeof(info->serial));
 
     uint32_t chip_id = sysinfo_hw->chip_id;

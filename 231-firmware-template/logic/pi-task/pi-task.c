@@ -1,5 +1,5 @@
 #include "pi-task/pi-task.h"
-#include "platform/platform.h"
+#include "systime/systime.h"
 #include <stddef.h>
 
 /* 1 член ряда ≈ 585 тактов при 125 МГц = 4.68 мкс; 100 членов ≈ 0.47 мс (< 0.5 мс) */
@@ -10,7 +10,7 @@ static uint32_t s_total_terms = 0;
 static uint32_t s_current_term = 0;
 static double s_sum = 0.0;
 static double s_result = 0.0;
-static uint64_t s_start_us = 0;
+static uint64_t s_start_ms = 0;
 static uint32_t s_elapsed_ms = 0;
 
 void pi_task_init(void)
@@ -20,7 +20,7 @@ void pi_task_init(void)
     s_current_term = 0;
     s_sum = 0.0;
     s_result = 0.0;
-    s_start_us = 0;
+    s_start_ms = 0;
     s_elapsed_ms = 0;
 }
 
@@ -34,7 +34,7 @@ bool pi_task_start(uint32_t terms)
     s_total_terms = terms;
     s_current_term = 0;
     s_sum = 0.0;
-    s_start_us = platform_time_us();
+    s_start_ms = systime_ms();
     s_state = PI_STATE_RUNNING;
     return true;
 }
@@ -70,7 +70,7 @@ void pi_task_handle(void)
     if (s_current_term >= s_total_terms)
     {
         s_result = 4.0 * s_sum;
-        s_elapsed_ms = (uint32_t)((platform_time_us() - s_start_us) / 1000ULL);
+        s_elapsed_ms = (uint32_t)(systime_ms() - s_start_ms);
         s_state = PI_STATE_DONE;
     }
 }

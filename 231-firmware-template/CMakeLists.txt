@@ -2,13 +2,21 @@ cmake_minimum_required(VERSION 3.13)
 
 include(pico_sdk_import.cmake)
 
-project(231_firmware_templateO)
+project(231_firmware_template)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
 
 pico_sdk_init()
 
+add_compile_options(-Wall)
+
+# libs лежит вне папки проекта: второй аргумент задаёт каталог сборки
 add_subdirectory(../libs ${CMAKE_BINARY_DIR}/libs)
+
+# выключатель профилирования: 0 — вызовов секундомеров в образе нет
+target_compile_definitions(profiling PUBLIC
+    PROFILING_ENABLED=1
+)
 
 add_library(platform STATIC
     platform/platform.c
@@ -37,9 +45,8 @@ target_link_libraries(logic
     PRIVATE
         device
         profiling
+        systime
 )
-
-add_compile_options(-Wall)
 
 add_executable(${PROJECT_NAME}
     main.c
@@ -54,6 +61,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     stdio_text_protocol
     device
     profiling
+    systime
     logging
     pico_standard_link
 )

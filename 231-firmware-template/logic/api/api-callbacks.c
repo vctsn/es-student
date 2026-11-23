@@ -1,7 +1,7 @@
 #include "api/api-commands.h"
 #include "firmware.h"
 #include "device/device.h"
-#include "platform/platform.h"
+#include "systime/systime.h"
 #include "profiling/profiling.h"
 #include "led-task/led-task.h"
 #include "button-task/button-task.h"
@@ -76,11 +76,6 @@ static void cmd_info(const command_t *command)
     printf("pico-sdk: %s\r\n", info.sdk_version);
 }
 
-static void cmd_uptime(const command_t *command)
-{
-    (void)command;
-    printf("uptime: %llu ms\r\n", (unsigned long long)(platform_time_us() / 1000ULL));
-}
 
 static void cmd_led_enable(const command_t *command)
 {
@@ -184,9 +179,21 @@ static void cmd_pi(const command_t *command)
     }
 }
 
+// В шапке файла заменить #include "platform/platform.h" на:
+#include "systime/systime.h"
+
+// В cmd_uptime:
+static void cmd_uptime(const command_t *command)
+{
+    (void)command;
+    printf("uptime: %llu ms\r\n", (unsigned long long)systime_ms());
+}
+
+// В cmd_profiling:
 static void cmd_profiling(const command_t *command)
 {
     (void)command;
+#if PROFILING_ENABLED
     profiling_result_t res;
     for (uint32_t id = 0; id < PROFILING_MAX_STOPWATCHES; id++)
     {
@@ -199,7 +206,11 @@ static void cmd_profiling(const command_t *command)
                    (unsigned long)res.max_us);
         }
     }
+#else
+    printf("profiling is disabled in this build\r\n");
+#endif
 }
+
 
 static void cmd_profiling_reset(const command_t *command)
 {

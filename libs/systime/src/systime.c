@@ -6,7 +6,7 @@ uint64_t systime_us(void)
     return to_us_since_boot(get_absolute_time());
 }
 
-uint32_t systime_ms(void)
+uint64_t systime_ms(void)
 {
     return to_ms_since_boot(get_absolute_time());
 }

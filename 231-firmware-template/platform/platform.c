@@ -19,11 +19,6 @@ void platform_init(void)
     gpio_pull_up(BUTTON_PIN);
 }
 
-uint64_t platform_time_us(void)
-{
-    return time_us_64();
-}
-
 void platform_led_set(bool on)
 {
 #ifdef PICO_DEFAULT_LED_PIN
@@ -35,6 +30,5 @@ void platform_led_set(bool on)
 
 bool platform_button_read(void)
 {
-    /* Кнопка замыкает GP15 на землю (активный уровень — 0) */
     return !gpio_get(BUTTON_PIN);
 }

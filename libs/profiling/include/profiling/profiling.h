@@ -19,7 +19,14 @@ typedef struct
 } profiling_result_t;
 
 void profiling_stopwatch_init(uint32_t id, const char *name);
-void profiling_start(uint32_t id);
-void profiling_stop(uint32_t id);
 bool profiling_get(uint32_t id, profiling_result_t *result);
 void profiling_reset(void);
+
+#if PROFILING_ENABLED
+void profiling_start(uint32_t id);
+void profiling_stop(uint32_t id);
+#else
+#define profiling_start(id) ((void)0)
+#define profiling_stop(id) ((void)0)
+#endif
+

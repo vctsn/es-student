@@ -1,9 +1,9 @@
 #include "button-task/button-task.h"
 #include "platform/platform.h"
+#include "systime/systime.h"
 #include <stddef.h>
 
 static const uint64_t BUTTON_DEBOUNCE_US = 20000;
-
 
 typedef enum {
     BUTTON_STATE_RELEASED,
@@ -11,7 +11,6 @@ typedef enum {
     BUTTON_STATE_PRESSED,
     BUTTON_STATE_RELEASE_DEBOUNCE,
 } button_state_t;
-
 
 static button_state_t s_state = BUTTON_STATE_RELEASED;
 static uint64_t s_debounce_start_us = 0;
@@ -29,7 +28,7 @@ void button_task_init(button_task_callback_t on_press)
 void button_task_handle(void)
 {
     bool raw_pressed = platform_button_read();
-    uint64_t now_us = platform_time_us();
+    uint64_t now_us = systime_us();
 
     switch (s_state)
     {

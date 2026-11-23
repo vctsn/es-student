@@ -1,5 +1,6 @@
 #include "led-task/led-task.h"
 #include "platform/platform.h"
+#include "systime/systime.h"
 #include <stdbool.h>
 
 #define LED_DEFAULT_PERIOD_MS 1000U
@@ -8,28 +9,6 @@ static led_state_t s_state = LED_STATE_BLINK;
 static uint32_t s_period_ms = LED_DEFAULT_PERIOD_MS;
 static bool s_level = false;
 static uint64_t s_last_us = 0;
-
-static bool period_elapsed(uint64_t *last_us, uint64_t period_us)
-{
-    uint64_t now = platform_time_us();
-    uint64_t elapsed = now - *last_us;
-
-    if (elapsed < period_us)
-    {
-        return false;
-    }
-
-    if (elapsed >= 2 * period_us)
-    {
-        *last_us = now;
-    }
-    else
-    {
-        *last_us += period_us;
-    }
-
-    return true;
-}
 
 void led_task_init(void)
 {
@@ -53,7 +32,7 @@ void led_task_set_state(led_state_t state)
     else if (s_state == LED_STATE_BLINK)
     {
         uint64_t half_period_us = ((uint64_t)s_period_ms * 1000ULL) / 2ULL;
-        s_last_us = platform_time_us() - half_period_us;
+        s_last_us = systime_us() - half_period_us;
     }
 }
 
@@ -76,27 +55,6 @@ uint32_t led_task_get_period_ms(void)
     return s_period_ms;
 }
 
-void led_task_handle(void)
-{
-    switch (s_state)
-    {
-        case LED_STATE_OFF:
-        case LED_STATE_ON:
-            break;
-
-        case LED_STATE_BLINK:
-        {
-            uint64_t half_period_us = ((uint64_t)s_period_ms * 1000ULL) / 2ULL;
-            if (period_elapsed(&s_last_us, half_period_us))
-            {
-                s_level = !s_level;
-                platform_led_set(s_level);
-            }
-            break;
-        }
-    }
-}
-
 void led_task_next_state(void)
 {
     switch (s_state)
@@ -112,5 +70,26 @@ void led_task_next_state(void)
         case LED_STATE_BLINK:
             led_task_set_state(LED_STATE_OFF);
             break;
+    }
+}
+
+void led_task_handle(void)
+{
+    switch (s_state)
+    {
+        case LED_STATE_OFF:
+        case LED_STATE_ON:
+            break;
+
+        case LED_STATE_BLINK:
+        {
+            uint64_t half_period_us = ((uint64_t)s_period_ms * 1000ULL) / 2ULL;
+            if (systime_period_elapsed(&s_last_us, half_period_us))
+            {
+                s_level = !s_level;
+                platform_led_set(s_level);
+            }
+            break;
+        }
     }
 }
