@@ -8,7 +8,7 @@
 static telemetry_state_t state = TELEMETRY_STATE_IDLE;
 static telemetry_task_callback_t record_callback = NULL;
 static uint32_t period_ms = 100U;
-static uint32_t last_time_ms = 0;
+static uint64_t last_time_us = 0;
 
 void telemetry_task_init(telemetry_task_callback_t on_record)
 {
@@ -24,7 +24,7 @@ bool telemetry_task_start(uint32_t new_period_ms)
     }
 
     period_ms = new_period_ms;
-    last_time_ms = systime_ms() - period_ms;
+    last_time_us = systime_us() - (uint64_t)period_ms * 1000ULL;
     state = TELEMETRY_STATE_RUN;
     return true;
 }
@@ -42,7 +42,7 @@ void telemetry_task_handle(void)
             break;
 
         case TELEMETRY_STATE_RUN:
-            if (systime_period_elapsed(&last_time_ms, period_ms))
+            if (systime_period_elapsed(&last_time_us, (uint64_t)period_ms * 1000ULL))
             {
                 telemetry_record_t record = {
                     .time_us = systime_us(),
