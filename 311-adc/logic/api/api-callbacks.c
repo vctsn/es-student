@@ -249,6 +249,20 @@ static void cmd_pi(const command_t *command)
     }
 }
 
+static void cmd_charge_on(const command_t *command)
+{
+    (void)command;
+    platform_charge_set(true);
+    printf("charge: on\r\n");
+}
+
+static void cmd_charge_off(const command_t *command)
+{
+    (void)command;
+    platform_charge_set(false);
+    printf("charge: off\r\n");
+}
+
 static void cmd_profiling(const command_t *command)
 {
     (void)command;
@@ -280,6 +294,8 @@ static void cmd_profiling_reset(const command_t *command)
 
 
 const api_command_t api_commands[] = {
+    { "charge_on",       "set GP22 high to charge RC",   cmd_charge_on },
+    { "charge_off",      "set GP22 low to discharge RC", cmd_charge_off },
     { "tm_start",        "start telemetry stream",         cmd_tm_start },
     { "tm_stop",         "stop telemetry stream",          cmd_tm_stop },
     { "get_temp", "chip temperature, degrees Celsius", cmd_get_temp },

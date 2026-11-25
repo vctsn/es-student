@@ -8,6 +8,7 @@
 #define ADC_PIN 26
 #define ADC_CHANNEL 0
 #define ADC_TEMP_CHANNEL 4
+#define CHARGE_PIN 22
 
 // опорное напряжение АЦП на плате Pico и число уровней 12-разрядного кода
 #define ADC_VREF_V 3.3f
@@ -29,6 +30,15 @@ void platform_init(void)
     adc_init();
     adc_gpio_init(ADC_PIN);
     adc_set_temp_sensor_enabled(true); //включаем питание датчика
+
+    gpio_init(CHARGE_PIN);
+    gpio_set_dir(CHARGE_PIN, GPIO_OUT);
+    gpio_put(CHARGE_PIN, false);
+}
+
+void platform_charge_set(bool on)
+{
+    gpio_put(CHARGE_PIN, on);
 }
 
 float platform_temp_read(void)
