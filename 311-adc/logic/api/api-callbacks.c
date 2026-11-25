@@ -6,12 +6,15 @@
 #include "led-task/led-task.h"
 #include "button-task/button-task.h"
 #include "pi-task/pi-task.h"
+#include "telemetry-task/telemetry-task.h"
 #include <errno.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "platform/platform.h"
+
+#define TELEMETRY_DEFAULT_PERIOD_MS 100
 
 static bool parse_u32(const char *text, uint32_t *out)
 {
@@ -49,6 +52,53 @@ static const char *led_state_name(led_state_t state)
         case LED_STATE_BLINK: return "blink";
         default:              return "unknown";
     }
+}
+
+void api_print_telemetry(const telemetry_record_t *record)
+{
+    if (record == NULL)
+    {
+        return;
+    }
+    printf("tm: %llu %.3f %.1f\r\n",
+           (unsigned long long)record->time_us,
+           record->voltage_v,
+           record->temp_c);
+}
+
+static void cmd_tm_start(const command_t *command)
+{
+    uint32_t period_ms = TELEMETRY_DEFAULT_PERIOD_MS;
+
+    if (command->argc > 1)
+    {
+        printf("error: usage tm_start [<period_ms>]\r\n");
+        return;
+    }
+
+    if (command->argc == 1)
+    {
+        if (!parse_u32(*command->argv, &period_ms))
+        {
+            printf("error: usage tm_start [<period_ms>]\r\n");
+            return;
+        }
+    }
+
+    if (!telemetry_task_start(period_ms))
+    {
+        printf("error: period_ms must be at least 10\r\n");
+        return;
+    }
+
+    printf("telemetry: started, period %lu ms\r\n", (unsigned long)period_ms);
+}
+
+static void cmd_tm_stop(const command_t *command)
+{
+    (void)command;
+    telemetry_task_stop();
+    printf("telemetry: stopped\r\n");
 }
 
 static void print_led_status(void)
@@ -228,7 +278,10 @@ static void cmd_profiling_reset(const command_t *command)
     printf("profiling reset\r\n");
 }
 
+
 const api_command_t api_commands[] = {
+    { "tm_start",        "start telemetry stream",         cmd_tm_start },
+    { "tm_stop",         "stop telemetry stream",          cmd_tm_stop },
     { "get_temp", "chip temperature, degrees Celsius", cmd_get_temp },
     { "get_voltage", "voltage on GP26, ADC input 0", cmd_get_voltage },
     { "info",            "device passport",                cmd_info },
