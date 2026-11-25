@@ -65,6 +65,13 @@ static void cmd_get_voltage(const command_t *command)
     printf("voltage: %.3f V\n", voltage);
 }
 
+static void cmd_get_temp(const command_t *command)
+{
+    (void)command;
+    float temp = platform_temp_read();
+    printf("temp: %.1f C\n", temp);
+}
+
 static void cmd_info(const command_t *command)
 {
     (void)command;
@@ -222,6 +229,7 @@ static void cmd_profiling_reset(const command_t *command)
 }
 
 const api_command_t api_commands[] = {
+    { "get_temp", "chip temperature, degrees Celsius", cmd_get_temp },
     { "get_voltage", "voltage on GP26, ADC input 0", cmd_get_voltage },
     { "info",            "device passport",                cmd_info },
     { "uptime",          "time since reset",               cmd_uptime },
