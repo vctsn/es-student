@@ -50,7 +50,7 @@ static void cmd_timer_blink_start(const command_t *command)
     uint32_t period = 0;
     if (command->argc != 1 || !parse_u32(command->argv[0], &period))
     {
-        printf("error: usage: timer_blink_start <period_ms>\n");
+        printf("error: usage timer_blink_start <period_ms>\n");
         return;
     }
     if (!platform_blink_start(period))
@@ -58,7 +58,6 @@ static void cmd_timer_blink_start(const command_t *command)
         printf("error: period_ms must be 10..60000\n");
         return;
     }
-    platform_blink_start(period);
     printf("timer_blink: started, period %lu ms\n", (unsigned long)period);
 }
 
