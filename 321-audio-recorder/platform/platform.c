@@ -400,10 +400,12 @@ void platform_init(void)
     irq_set_exclusive_handler(DMA_IRQ_1, on_block_done);
     irq_set_enabled(DMA_IRQ_1, true);
 
+    // два канала потока сообщают о заполненном буфере через DMA_IRQ_0
     stream_channels[0] = dma_claim_unused_channel(true);
     stream_channels[1] = dma_claim_unused_channel(true);
     irq_set_exclusive_handler(DMA_IRQ_0, on_stream_buffer);
     irq_set_enabled(DMA_IRQ_0, true);
+
 }
 
 void platform_charge_set(bool on)
