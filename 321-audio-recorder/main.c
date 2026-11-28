@@ -10,6 +10,7 @@
 #include <stddef.h>
 #include "telemetry-task/telemetry-task.h"
 #include "block-task/block-task.h"
+#include "stream-task/stream-task.h"
 
 
 typedef enum {
@@ -19,6 +20,7 @@ typedef enum {
     STOPWATCH_BUTTON,
     STOPWATCH_PI,
     STOPWATCH_TELEMETRY,
+    STOPWATCH_STREAM,
 } stopwatch_id_t;
 
 int main(void)
@@ -38,6 +40,7 @@ int main(void)
     telemetry_task_init(api_print_telemetry);
 
     LOG_INF("%s %s", FIRMWARE_NAME, FIRMWARE_VERSION);
+    stream_task_init(api_send_frame);
 
     while (1)
     {
@@ -70,6 +73,9 @@ int main(void)
         profiling_stop(STOPWATCH_TELEMETRY);
         block_task_handle();
 
+        profiling_start(STOPWATCH_STREAM);
+        stream_task_handle();
+        profiling_stop(STOPWATCH_STREAM);
     }
 
     return 0;

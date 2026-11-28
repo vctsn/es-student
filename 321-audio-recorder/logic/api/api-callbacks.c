@@ -14,9 +14,11 @@
 #include <stdlib.h>
 #include "platform/platform.h"
 #include "block-task/block-task.h"
+#include "stream-task/stream-task.h"
 
 
 #define TELEMETRY_DEFAULT_PERIOD_MS 100
+#define STREAM_BLINK_PERIOD_MS 250
 
 
 
@@ -46,6 +48,58 @@ static bool parse_u32(const char *text, uint32_t *out)
     *out = (uint32_t)val;
     return true;
 }
+
+
+void api_send_frame(const stream_header_t *header, const uint8_t *data, uint32_t bytes)
+{
+    platform_write(header, sizeof(*header));
+    platform_write(data, bytes);
+}
+
+static void cmd_stream_start(const command_t *command)
+{
+    uint32_t bits = 16;
+
+    if (command->argc > 1)
+    {
+        printf("error: usage stream_start [8|16]\n");
+        return;
+    }
+
+    if (command->argc == 1)
+    {
+        if (!parse_u32(command->argv[0], &bits) || (bits != 8 && bits != 16))
+        {
+            printf("error: usage stream_start [8|16]\n");
+            return;
+        }
+    }
+
+    if (telemetry_task_get_state() == TELEMETRY_STATE_RUN || !stream_task_start((uint8_t)bits))
+    {
+        printf("error: adc busy\n");
+        return;
+    }
+
+    printf("stream: started, 44100 Hz, %lu bit\n", (unsigned long)bits);
+    led_task_set_state(LED_STATE_OFF);
+    platform_blink_start(STREAM_BLINK_PERIOD_MS);
+}
+
+static void cmd_stream_stop(const command_t *command)
+{
+    (void)command;
+    if (stream_task_get_state() == STREAM_STATE_RUN)
+    {
+        stream_task_stop();
+        platform_blink_stop();
+    }
+    printf("stream: stopped, %lu frames, %lu samples, %lu overruns\n",
+           (unsigned long)stream_task_get_frames(),
+           (unsigned long)stream_task_get_samples(),
+           (unsigned long)stream_task_get_overruns());
+}
+
 
 static void print_dma_cap(const uint16_t *samples, uint32_t count, uint32_t time_us)
 {
@@ -449,6 +503,8 @@ static void cmd_profiling_reset(const command_t *command)
 
 
 const api_command_t api_commands[] = {
+    { "stream_start",    "start audio stream: stream_start [8|16]", cmd_stream_start },
+    { "stream_stop",     "stop audio stream",                       cmd_stream_stop },
     { "dma_cap", "capture ADC block via DMA: dma_cap <N>", cmd_dma_cap },
     { "cap_start",       "capture ADC samples: cap_start <N> <period_us>", cmd_cap_start },
     { "cap_dump",        "dump captured ADC samples",                      cmd_cap_dump },
