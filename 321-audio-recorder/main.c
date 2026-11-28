@@ -9,6 +9,8 @@
 #include "pi-task/pi-task.h"
 #include <stddef.h>
 #include "telemetry-task/telemetry-task.h"
+#include "block-task/block-task.h"
+
 
 typedef enum {
     STOPWATCH_LOOP = 0,
@@ -66,6 +68,8 @@ int main(void)
         profiling_start(STOPWATCH_TELEMETRY);
         telemetry_task_handle();
         profiling_stop(STOPWATCH_TELEMETRY);
+        block_task_handle();
+
     }
 
     return 0;

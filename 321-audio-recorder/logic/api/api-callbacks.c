@@ -13,6 +13,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "platform/platform.h"
+#include "block-task/block-task.h"
+
 
 #define TELEMETRY_DEFAULT_PERIOD_MS 100
 
@@ -44,6 +46,64 @@ static bool parse_u32(const char *text, uint32_t *out)
     *out = (uint32_t)val;
     return true;
 }
+
+static void print_dma_cap(const uint16_t *samples, uint32_t count, uint32_t time_us)
+{
+    if (samples == NULL || count == 0)
+    {
+        return;
+    }
+
+    uint16_t min_val = samples[0];
+    uint16_t max_val = samples[0];
+    uint64_t sum = 0;
+
+    for (uint32_t i = 0; i < count; i++)
+    {
+        uint16_t val = samples[i];
+        if (val < min_val)
+        {
+            min_val = val;
+        }
+        if (val > max_val)
+        {
+            max_val = val;
+        }
+        sum += val;
+    }
+
+    double mean_val = (double)sum / (double)count;
+    uint64_t expected_us = (uint64_t)count * 1000000ULL / PLATFORM_SAMPLE_RATE_HZ;
+
+    printf("dma_cap: %lu samples in %lu us, expected %llu us, min %u max %u mean %.1f\n",
+           (unsigned long)count,
+           (unsigned long)time_us,
+           (unsigned long long)expected_us,
+           min_val,
+           max_val,
+           mean_val);
+}
+
+static void cmd_dma_cap(const command_t *command)
+{
+    uint32_t count = 0;
+    if (command->argc != 1 || !parse_u32(command->argv[0], &count))
+    {
+        printf("error: usage dma_cap <N>\n");
+        return;
+    }
+    if (count == 0 || count > PLATFORM_BLOCK_MAX)
+    {
+        printf("error: N must be 1..8192\n");
+        return;
+    }
+    if (telemetry_task_get_state() == TELEMETRY_STATE_RUN || !block_task_start(count, print_dma_cap))
+    {
+        printf("error: adc busy\n");
+        return;
+    }
+}
+
 
 static void cmd_cap_start(const command_t *command)
 {
@@ -389,6 +449,7 @@ static void cmd_profiling_reset(const command_t *command)
 
 
 const api_command_t api_commands[] = {
+    { "dma_cap", "capture ADC block via DMA: dma_cap <N>", cmd_dma_cap },
     { "cap_start",       "capture ADC samples: cap_start <N> <period_us>", cmd_cap_start },
     { "cap_dump",        "dump captured ADC samples",                      cmd_cap_dump },
     { "timer_blink_start", "blink led by timer: timer_blink_start <period_ms>", cmd_timer_blink_start },
